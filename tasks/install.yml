@@ -1,0 +1,10 @@
+- name: Install postfix
+  package:
+    name:
+      - postfix
+      - libsasl2-modules  # Debian specific
+
+- name: Manage postfix service
+  service:
+    name: postfix
+    state: started

@@ -1,0 +1,20 @@
+galaxy_info:
+  author: Markus Frosch
+  description: Configure mail relay using Postfix
+  company: ''
+
+  license: GPL-3.0-or-later
+
+  min_ansible_version: '2.1'
+
+  platforms:
+    - name: Debian
+      versions:
+        - any
+    - name: Ubuntu
+      versions:
+        - any
+
+  galaxy_tags: []
+
+dependencies: []

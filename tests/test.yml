@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  become: true
+  roles:
+    - lazyfrosch.postfix-relay
+  vars:
+    postfix_main:
+      relayhost: '[mail.example.com]:submission'
+      smtp_connection_cache_on_demand: false
+      smtp_tls_policy_maps: hash:/etc/postfix/tls_policy
+      sender_canonical_maps: hash:/etc/postfix/sender_canonical_map
+
+    postfix_maps:
+      /etc/postfix/sasl_password:
+        - mail.example.com user:password
+
+      /etc/postfix/sender_canonical_map:
+        - '@{{ ansible_fqdn }} server@example.com'
+        - 'user@{{ ansible_fqdn }} user@example.com'
+
+      /etc/postfix/tls_policy:
+        - mail.example.com encrypt
+        - '[mail.example.com]:587 encrypt'

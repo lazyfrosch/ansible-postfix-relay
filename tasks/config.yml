@@ -1,0 +1,35 @@
+- name: Build full settings for main.cf
+  set_fact:
+    postfix_main_full: '{{ postfix_main_defaults | combine(postfix_main) }}'
+
+- name: Manage settings in main.cf
+  lineinfile:
+    path: /etc/postfix/main.cf
+    regexp: '^{{ item.key }}\s*=.*'
+    line: "\
+      {{ item.key }} = \
+      {% if item.value == True %}{# noqa 601 #}\
+      yes\
+      {% elif item.value == False %}{# noqa 601 #}\
+      no\
+      {% else %}\
+      {{ item.value }}\
+      {% endif %}"
+  with_dict: '{{ postfix_main_full }}'
+  notify: reload postfix
+
+- name: Configure mailname
+  copy:
+    dest: /etc/mailname
+    content: |
+      {{ postfix_main_full.myorigin }}
+    mode: '0644'
+  when: ansible_os_family == 'Debian'
+
+- name: Manage Postfix maps
+  include_tasks: map.yml
+  with_dict: '{{ postfix_maps }}'
+
+- name: Check Postfix config
+  command: postfix check
+  changed_when: false
