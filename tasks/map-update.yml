@@ -1,0 +1,13 @@
+- name: Check stat for {{ _postmap_file }}
+  stat:
+    path: '{{ _postmap_file }}'
+  register: map_file
+
+- name: Check stat for {{ _postmap_file }}.db
+  stat:
+    path: '{{ _postmap_file }}.db'
+  register: db_file
+
+- name: Update Postfix map db {{ _postmap_file }}.db
+  command: postmap {{ _postmap_file }}
+  when: not db_file.stat.exists or db_file.stat.mtime < map_file.stat.mtime

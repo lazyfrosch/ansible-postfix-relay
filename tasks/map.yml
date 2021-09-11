@@ -8,16 +8,6 @@
       {{ line }}
       {% endfor -%}
 
-- name: Check stat for {{ item.key }}
-  stat:
-    path: '{{ item.key }}'
-  register: map_file
-
-- name: Check stat for {{ item.key }}.db
-  stat:
-    path: '{{ item.key }}.db'
-  register: db_file
-
-- name: Update Postfix map db {{ item.key }}.db
-  command: postmap {{ item.key }}
-  when: not db_file.stat.exists or db_file.stat.mtime < map_file.stat.mtime
+- import_tasks: map-update.yml
+  vars:
+    _postmap_file: '{{ item.key }}'
