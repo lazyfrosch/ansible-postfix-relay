@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: all
   become: true
   roles:
     - lazyfrosch.postfix-relay
@@ -21,3 +21,7 @@
       /etc/postfix/tls_policy:
         - mail.example.com encrypt
         - '[mail.example.com]:587 encrypt'
+
+    postfix_aliases:
+      root: admins@example.com
+      markus: user@example.com

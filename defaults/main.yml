@@ -13,3 +13,8 @@ postfix_main_defaults:
 
 postfix_maps:
   /etc/postfix/sasl_password: []
+
+postfix_aliases: {}
+# postfix_aliases:
+#   root: user
+#   user: user@example.com

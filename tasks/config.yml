@@ -26,6 +26,19 @@
     mode: '0644'
   when: ansible_os_family == 'Debian'
 
+- block:
+    - name: Manage /etc/aliases
+      lineinfile:
+        path: /etc/aliases
+        regexp: '^{{ item.key }}\s*=.*'
+        line: '{{ item.key }}: {{ item.value }}'
+      with_dict: '{{ postfix_aliases }}'
+      register: aliases
+
+    - name: Update /etc/aliases map
+      command: newaliases
+      when: aliases.changed
+
 - name: Manage Postfix maps
   include_tasks: map.yml
   with_dict: '{{ postfix_maps }}'
